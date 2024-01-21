@@ -1,47 +1,34 @@
 #include "sort.h"
 
 /**
- * insertion_sort_list - sort a list
- * @list: unsorted linked list
+ * insertion_sort_list - insertion sort
+ * @list: double linked list
  */
 void insertion_sort_list(listint_t **list)
 {
-	listint_t *node;
+	int key;
+	listint_t *tmp;
 
-	if (list == NULL || (*list)->next == NULL)
+	if (!list)
 		return;
-	node = (*list)->next;
-
-	while (node)
+	tmp = *list;
+	while (tmp)
 	{
-		while ((node->prev) && (node->prev->n > node->n))
+		while (tmp)
 		{
-			print_list(*list);
+			if (tmp->next)
+			{
+				if (tmp->n > tmp->next->n)
+				{
+					key = tmp->n;
+					*(int *)&tmp->n = tmp->next->n;
+					*(int *)&tmp->next->n = key;
+					tmp = *list;
+					print_list(*list);
+					break;
+				}
+			}
+			tmp = tmp->next;
 		}
-		node = node->next;
 	}
-}
-
-/**
- * swap_node - swap a node helper
- * @node: node
- * @list: node list
- * Return: return pointer of current node
- */
-listint_t *swap_node(listint_t *node, listint_t **list)
-{
-	listint_t *back = node->prev, *current = node;
-	/*NULL, 19, 48, 9, 71, 13, NULL*/
-
-	back->next = current->next;
-	if (current->next)
-		current->next->prev = back;
-	current->next = back;
-	current->prev = back->prev;
-	back->prev = current;
-	if (current->prev)
-		current->prev->next = current;
-	else
-		*list = current;
-	return (current);
 }
